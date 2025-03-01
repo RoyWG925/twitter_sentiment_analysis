@@ -1,0 +1,9 @@
+opencv-python
+torch
+torchvision
+transformers
+pytesseract
+easyocr
+numpy
+matplotlib
+pyautogui

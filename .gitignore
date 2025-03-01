@@ -1,0 +1,3 @@
+models/*.pth
+data/raw/
+data/processed/
