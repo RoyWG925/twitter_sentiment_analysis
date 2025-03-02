@@ -1,24 +1,25 @@
 import cv2
 import numpy as np
-import pyautogui
+import matplotlib.pyplot as plt
+from PIL import ImageFont, ImageDraw, Image
 
-def draw_overlay(sentiment_score, topic):
-    """在螢幕上顯示情緒分數與話題分類（支援繁體字）"""
-    screen = pyautogui.screenshot()
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_RGB2BGR)
+font_path = "data/fonts/TaipeiSansTCBeta-Regular.ttf"
 
-    text = f"情緒: {sentiment_score}/10, 類別: {topic}"
-    position = (50, 50)
+def draw_overlay(img, sentiment, topic):
+    """在畫面上標記情緒與話題（使用 Matplotlib 顯示）"""
+    pil_img = Image.fromarray(img)
+    draw = ImageDraw.Draw(pil_img)
+    
+    font = ImageFont.truetype(font_path, 30) if font_path else None
+    draw.text((50, 50), f"情緒: {sentiment}/10", font=font, fill=(0, 255, 0))
+    draw.text((50, 100), f"話題: {topic}", font=font, fill=(255, 0, 0))
 
-    # 使用中文字體（需要安裝 Taipei Sans TC）
-    font_path = "data/fonts/TaipeiSansTCBeta-Regular.ttf"
-    font = cv2.FONT_HERSHEY_SIMPLEX  # 如果無法顯示，改用這個
+    img = np.array(pil_img)
 
-    cv2.putText(screen, text, position, font, 1, (0, 255, 0), 2)
-    cv2.imshow("Analysis", screen)
-    cv2.waitKey(1000)
-    cv2.destroyAllWindows()
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    plt.axis("off")  # 隱藏座標軸
+    plt.show()
 
 if __name__ == "__main__":
-    draw_overlay(8, "娛樂")
+    img = np.zeros((400, 800, 3), dtype=np.uint8)
+    draw_overlay(img, 8, "娛樂")
